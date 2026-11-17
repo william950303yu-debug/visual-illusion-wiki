@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>你看到的顏色是真的嗎？｜視覺實驗室</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f6f3e9;color:#183b36;font:18px/1.65 system-ui,sans-serif}
+main{max-width:780px;margin:auto;padding:22px}
+header,nav{display:flex;justify-content:space-between;align-items:center;
+  gap:12px;padding:12px 0;border-bottom:1px solid #a7b7a9}
+nav{border:0;border-top:1px solid #a7b7a9;margin-top:24px}
+section{padding:14px 0;min-height:370px}
+[hidden]{display:none!important}
+h1,h2{line-height:1.25}h1{font-size:clamp(36px,7vw,64px)}
+h2{font-size:clamp(26px,5vw,38px)}
+button{font:inherit;padding:7px 13px;margin:3px;border:1px solid #54746c;
+  border-radius:8px;background:white;color:#173f38;cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
+button[aria-pressed="true"],nav button:last-child{color:white;background:#175649}
+button:focus-visible,a:focus-visible{outline:3px solid #d16c24}
+a{color:#126450}.tag,small{color:#49645d}
+.note{background:#e1ece3;border-left:4px solid #39775e;padding:12px 16px}
+.pair,.disks{display:flex;border-radius:12px;overflow:hidden}
+.field{flex:1;height:155px;display:grid;place-items:center;background:#252525}
+.field+.field{background:#eee}.field i{width:58px;height:58px;background:#888}
+.equal .field{background:#aaa}
+.board{display:block;width:min(100%,430px);margin:auto}
+.disks{background:#333;justify-content:space-around;padding:30px 4px}
+.disk{width:min(19vw,112px);aspect-ratio:1;border-radius:50%;background-color:#fff2b0;
+  background-image:repeating-linear-gradient(0deg,transparent 0 4px,var(--line) 4px 6px)}
+.clear .disk{background-image:none}
+</style>
+</head>
+<body>
+<main>
+<header><b>視覺實驗室</b><span id="counter"></span></header>
+
+<section>
+  <p class="tag">一份可以動手驗證的觀察手冊</p>
+  <h1>你看到的顏色<br>是真的嗎？</h1>
+  <p>兩個色塊看起來不同，要怎麼知道是色塊本身不同，還是周圍的圖案影響了你？</p>
+  <p class="note">做三次小實驗：先記住第一眼的感覺，再一次只改一件事，看看你的判斷會不會改變。</p>
+  <p>① 背景對照　② 棋盤陰影　③ 彩色細線</p>
+</section>
+
+<section hidden>
+  <p class="tag">第一關／背景對照</p>
+  <h2>哪個中央方塊看起來比較亮？</h2>
+  <div class="pair" id="pair"><div class="field"><i></i></div><div class="field"><i></i></div></div>
+  <p class="choices"><button>左邊</button><button>右邊</button><button>一樣</button></p>
+  <button class="reveal" disabled>統一背景</button>
+  <p class="note result" hidden>兩個中央方塊從頭到尾都是 #888888。剛才改變的是背景。想確認的話，可以按「再看原貌」來回比較。</p>
+  <small>教學改編：<a class="notes">Wiki S02｜移動灰條</a></small>
+</section>
+
+<section hidden>
+  <p class="tag">第二關／棋盤陰影</p>
+  <h2>A、B 哪格看起來比較亮？</h2>
+  <p>這是自繪簡化圖。把左半邊想成受光區，右半邊想成陰影區，比較字母下方的灰色。</p>
+  <svg class="board" viewBox="0 0 300 180" role="img" aria-label="左右明暗不同的棋盤，請比較 A 格和 B 格">
+    <defs>
+      <pattern id="lit" width="100" height="90" patternUnits="userSpaceOnUse">
+        <rect width="100" height="90" fill="#ddd"/>
+        <path d="M0 0h50v45H0z M50 45h50v45H50z" fill="#777"/>
+      </pattern>
+      <pattern id="shade" width="100" height="90" patternUnits="userSpaceOnUse">
+        <rect width="100" height="90" fill="#777"/>
+        <path d="M0 0h50v45H0z M50 45h50v45H50z" fill="#333"/>
+      </pattern>
+    </defs>
+    <rect width="150" height="180" fill="url(#lit)"/>
+    <rect x="150" width="150" height="180" fill="url(#shade)"/>
+    <path id="bridge" d="M75 73H225" stroke="#777" stroke-width="14" style="display:none"/>
+    <g fill="white" font-size="17" text-anchor="middle">
+      <text x="75" y="65">A</text><text x="225" y="65">B</text>
+    </g>
+  </svg>
+  <p class="choices"><button>A 比較亮</button><button>B 比較亮</button><button>一樣</button></p>
+  <button class="reveal" disabled>接上灰色長條</button>
+  <p class="note result" hidden>A、B 和連接它們的長條都是 #777777。看 MIT 原圖時，我第一眼覺得 B 比較亮；看到驗證圖後，兩格看起來一樣。陰影線索會影響我們對表面明暗的判斷。</p>
+  <small><a class="first">Wiki S01｜我的實測</a> · <a class="notes">Wiki S03｜明暗解析</a> · <a href="https://persci.mit.edu/gallery/checkershadow/" target="_blank" rel="noopener">看 MIT 原圖</a></small>
+</section>
+
+<section hidden>
+  <p class="tag">第三關／色彩同化</p>
+  <h2>三個圓盤用了幾種底色？</h2>
+  <p>只猜圓盤本身，蓋在上面的彩色細線不算。</p>
+  <div class="disks" id="disks">
+    <i class="disk" style="--line:#119fb3"></i>
+    <i class="disk" style="--line:#d74297"></i>
+    <i class="disk" style="--line:#ccaa03"></i>
+  </div>
+  <p class="choices"><button>一種</button><button>兩種</button><button>三種</button></p>
+  <button class="reveal" disabled>隱藏細線</button>
+  <p class="note result" hidden>三個圓盤都用了同一種淡黃色 #FFF2B0。覆蓋的細線可能讓圓盤看起來偏向不同色調。把細線移除，就能直接比較底色。</p>
+  <small>教學改編：<a class="notes">Wiki S04｜色彩同化</a></small>
+</section>
+
+<section hidden>
+  <p class="tag">最後一題／檢查你學會了什麼</p>
+  <h2>第一關按下「統一背景」後，哪裡真的換了顏色？</h2>
+  <button id="wrong">中央方塊</button><button id="right">周圍背景</button>
+  <p id="feedback" aria-live="polite"></p>
+  <p class="note">下次遇到相似圖片，可以先把兩個目標放到相同背景上，再比較色碼。把「我第一眼的感覺」和「我怎麼驗證」分開記錄。</p>
+  <small>理解題設計參考：<a class="notes">Wiki S05｜展品評估</a></small>
+</section>
+
+<nav><button id="prev">← 上一頁</button><button id="next">開始挑戰 →</button></nav>
+</main>
+<script>
+const pages=[...document.querySelectorAll('section')];
+const root='https://github.com/william950303yu-debug/visual-illusion-wiki/blob/main/wiki/';
+document.querySelectorAll('.notes').forEach(a=>a.href=root+'02-source-notes.md');
+document.querySelector('.first').href=root+'01-checker-shadow.md';
+document.querySelectorAll('small a').forEach(a=>{a.target='_blank';a.rel='noopener'});
+
+let page=0;
+function draw(){
+  pages.forEach((s,i)=>s.hidden=i!==page);
+  document.querySelector('#counter').textContent=(page+1)+' / '+pages.length;
+  document.querySelector('#prev').disabled=page===0;
+  document.querySelector('#next').textContent=page===4?'重新挑戰 ↺':page===0?'開始挑戰 →':'下一頁 →';
+  window.scrollTo(0,0);
+}
+document.querySelector('#prev').onclick=()=>{if(page>0)page--;draw()};
+document.querySelector('#next').onclick=()=>{
+  if(page===4){location.reload();return}
+  page++;draw();
+};
+document.querySelectorAll('.reveal').forEach((btn,i)=>{
+  const sec=btn.closest('section'), result=sec.querySelector('.result'), label=btn.textContent;
+  const choices=[...sec.querySelectorAll('.choices button')];
+  function show(on){
+    result.hidden=!on;btn.textContent=on?'再看原貌':label;
+    if(i===0)document.querySelector('#pair').classList.toggle('equal',on);
+    if(i===1)document.querySelector('#bridge').style.display=on?'inline':'none';
+    if(i===2)document.querySelector('#disks').classList.toggle('clear',on);
+  }
+  choices.forEach(b=>b.onclick=()=>{
+    choices.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+    btn.disabled=false;show(false);
+  });
+  btn.onclick=()=>show(result.hidden);
+});
+document.querySelector('#wrong').onclick=()=>{
+  document.querySelector('#feedback').textContent='再想想：兩個中央方塊的色碼一直都是 #888888。';
+};
+document.querySelector('#right').onclick=()=>{
+  document.querySelector('#feedback').textContent='答對了。背景改變，中央方塊的灰色沒有改變。';
+};
+draw();
+</script>
+</body>
+</html>
